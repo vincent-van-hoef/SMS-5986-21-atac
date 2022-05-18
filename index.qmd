@@ -1,6 +1,6 @@
 ---
-title: "Tumor progression in breast cancer reflected in gene expression patterns and mutational profile"
-subtitle: "Project #5975"
+title: "Analysis of human myeloid cell activation using ATAC sequencing"
+subtitle: "Project #5986"
 author: "Vincent van Hoef"
 date: today
 title-block-banner: true
@@ -34,32 +34,93 @@ box_auth()
 
 Here you can see the status of the report. This will be updated as sections are added or improved.
 
-- Version 1: [12/5/22] Most results included, but sections on nanostring correlation and ESR1 mutation remain to be added.
-- Version 1.1: [16/5/22] Update of TMB calculation; combinations of three variant callers and remove common variants + add paired plot.
-- Version 1.2: [17/5/22] ESR1 mutation table added.
-- Version 1.3: [17/5/22] Table and plot of correlation between Nanostring signature and TMB score added.
+- Version 1: [12/5/22] 
 
 :::
-
-# Introduction
-
-This is the report of the analysis for project #5975, requested by Lisa Rydén (LU). For this study, targeted next generation sequencing by hybridization capture was performed to get data about a panel of 442 genes. The main aim of the analysis is to call somatic variants in a collection of 205 breast cancer samples; some of which are matched pairs of primary tumors and distance metastases or primary tumors and lymph node metastases. Matched normal samples are however not available but might be included later for more accurate results. 
-
-Contract:
-
-* Preprocessing of 205 samples 
-* CNV and SNV detection
-* Format data to allow for analysis of correlation with survival and clinical annotation
-* Detection of differences in CNV and SNV between primary tumors and lymph node or distant metastases
-* Correlation with tumor grouping and BC360 gene signatures based on Nanostring expression data
-
-[150 hours]
 
 :::{.callout-note}
 Please let me know if any of the visualizations or links seem to be erratic. We recently changed reporting tool and small issues might still be present.
 
 You can leave comments on this report by opening the sidebar on the very right of this page. After signing up for Hypothes.is via the link at the top of the sidebar, commenting is quick and easy. Just highlight the section you want to remark upon and write your comment. Leave it in the public group ("Post to Public") and I will be able to see it and update the text if necessary.
 :::
+
+# Introduction
+
+This is the report for the analysis of project #5986. It includes the preprocessing, quality control and downstream analysis (i.e. differential expression and pathway enrichment analysis). More raw data is available but not yet included in this report. The experiment consist of 2 patient-derived cell lines; each either knocked down for IRAK3 or control and followed during 4 timepoints: 0, 1, 4 and 24 hours. So, a total of 16 samples to be analyzed:
+
+```{r tab, results='asis'}
+tab <- "
+| Name | Treatment | Time | Donor |
+|------|:-----------:|:------:|:-----:|
+| C0_R1 | Control | 0 | 5 |
+| C0_R2 | Control | 0 | 6 |
+| C1_R1 | Control | 1 | 5 |
+| C1_R2 | Control | 1 | 6 |
+| C4_R1 | Control | 4 | 5 |
+| C4_R2 | Control | 4 | 6 |
+| C24_R1 | Control | 24 | 5 |
+| C24_R2 | Control | 24 | 6 |
+| IK0_R1 | Knockdown | 0 | 5 |
+| IK0_R2 | Knockdown | 0 | 6 |
+| IK1_R1 | Knockdown | 1 | 5 |
+| IK1_R2 | Knockdown | 1 | 6 |
+| IK4_R1 | Knockdown | 4 | 5 |
+| IK4_R2 | Knockdown | 4 | 6 |
+| IK24_R1 | Knockdown | 24 | 5 |
+| IK24_R2 | Knockdown | 24 | 6 |
+"
+cat(tab)
+```
+
+The donors will serve as replicates to allow for a statistical analysis. The biggest interest is comparing the knockdown of IRAK3 versus the control for each time point. Also of interest is the time-dependent chromatin accesibility in the control cells after stimulation, so comparing C1, C4 and C24 versus C0.
+
+A contract was set up with the following deliverables:
+
+* Raw data transfer to Bianca project
+* Run best practice preprocessing pipeline
+* Pre- and post alignment quality control
+* Peak calling
+* Differential peak analysis + annotation
+* Pathway enrichment
+* Report with all results, tables and analysis code
+
+# Preprocessing
+
+The data is delivered as standard fastq files containing the raw, unmapped read data. The data preprocessing was done by running the nf-core atacseq pipeline. Briefly, the following steps were performed:
+
+1. Raw read QC
+2. Adapter trimming
+3. Alignment (BWA)
+4. Mark duplicates
+5. Merge alignments from multiple libraries of the same sample
+    + Re-mark duplicates
+    + Filtering to remove:
+        * reads mapping to mitochondrial DNA
+        * reads mapping to blacklisted regions
+        * reads that are marked as duplicates
+        * reads that arent marked as primary alignments
+        * reads that are unmapped
+        * reads that map to multiple locations
+        * reads containing > 4 mismatches
+        * reads that are soft-clipped
+        * reads that have an insert size > 2kb
+        * reads that map to different chromosomes
+        * reads that arent in FR orientation
+        * reads where only one read of the pair fails the above criteria
+    + Alignment-level QC and estimation of library complexity
+    + Create normalised bigWig files scaled to 1 million mapped reads
+    + Generate gene-body meta-profile from bigWig files
+    + Calculate genome-wide enrichment
+    + Call broad peaks (MACS2)
+    + Annotate peaks relative to gene features
+    + Create consensus peakset across all samples and create tabular file to aid in the filtering of the data
+    + Count reads in consensus peaks (featureCounts)
+    + Differential accessibility analysis, PCA and clustering
+    + Generate ATAC-seq specific QC html report
+6. Create IGV session file containing bigWig tracks, peaks and differential sites for data visualisation (IGV).
+7. Present QC for raw read, alignment, peak-calling and differential accessibility results (ataqv, MultiQC, R)
+
+
 
 # Material and Methods
 
