@@ -373,7 +373,7 @@ html`<p></p>`
 # Volcano
 
 ```{ojs}
-html`<img src="./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png" width:100% height:600px></img>`
+html`<iframe src="./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png" width:100% height:300px></iframe>`
 ```
 
 # Data
