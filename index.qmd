@@ -133,6 +133,8 @@ The data was delivered as standard fastq files containing the raw, unmapped read
 
 Modern high throughput sequencers can generate hundreds of millions of sequences in a single run. Before analysing this sequences to draw biological conclusions you should always perform some simple quality control checks to ensure that the raw data looks good and there are no problems or biases in your data which may affect how you can usefully use it. Two very useful quality control softwares were run on the data: multiQC and ataqv. These contain many high-quality plots; most of them are interactive and with relevant help sections to help interpretation. Most figures can be filtered and downloaded as needed. If the figures are too small to see, please right-click and "Open Frame in New Tab"
 
+### Overview
+
 ::: { .panel-tabset}
 
 ### MultiQC
@@ -163,12 +165,167 @@ ataqv makes some ATAC specific quality plots. Again, below is an interactive rep
 
 ::: {#fig-ataqv}
 
-<iframe width="560" height="615" src="./Results/bwa/mergedLibrary/ataqv/broadPeak/html/index.html"></iframe>
+<iframe width="560" height="415" src="./Results/bwa/mergedLibrary/ataqv/broadPeak/html/index.html"></iframe>
 
 Ataqv Report.
 :::
 
 :::
+
+:::{.callout-note}
+To summarize, the quality of the data looks good to excellent. There are no outlier samples that should be removed before the downstream analysis nor seem there be to be systematic differences between the different donors, time points or treatment.
+:::
+
+Below, a few ATAC-specific quality plots are highlighted.
+
+### Fragment size 
+
+Typically, a successful ATAC-seq experiment should generate a fragment size distribution plot with decreasing and periodical peaks corresponding to the nucleosome-free regions (NFR) (< 100bp) and mono-, di-, and tri-nucleosomes (~200, 400, 600bp, respectively). All samples have a fragment size distribution showing the expected peaks.
+
+```{r}
+fl <- list.files(path = "./Results/bwa/mergedLibrary/picard_metrics/pdf/", pattern = ".mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf")
+fl <- as.list(gsub(".mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf", "", fl))
+ojs_define(insert_hist = fl)
+```
+
+```{ojs}
+viewof sample_sel = Inputs.select(insert_hist, { label: "Choose Sample" })
+html`<p></p>`
+```
+
+```{ojs}
+//| label: fig-insert-hist
+//| fig-cap: "Insert size histogram."
+html`<iframe src="./Results/bwa/mergedLibrary/picard_metrics/pdf/${sample_sel}.mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf" width:100% height:600px></iframe>`
+```
+
+### FRiP
+
+To Be Added.
+
+### Number of peaks
+
+Peaks were only called when present in both replicates; this to reduce most of the donor specific effects. In total, so combining all peaks found in both replicates across all samples, the number of peaks is 82704. Below you can see an UpSet plot of how these are distributed among the samples.
+
+::: {#fig-peaks}
+
+<iframe width="100%" height="600" src="./Results/bwa/mergedLibrary/macs/broadPeak/consensus/consensus_peaks.mLb.clN.boolean.intersect.plot.pdf"></iframe>
+
+Peak Count.
+:::
+
+
+## Normalization
+
+Several technical issues can result in different read depths and distributions across samples. Examples of these issues are sample quality, sample amount, sequencing depth, GC content, ... If these issues differentially affect samples, this can result in spurious differentially expressed peaks; i.e one could have both false positive and false negative results.
+
+### Overview 
+
+Below are two plots showing the need for normalization. Left you can see an [RLE plot](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0191629) which is a powerful tool for visualizing unwanted variation in high-dimensional data. Because of their ability to detect unwanted variation, RLE plots are particularly useful for assessing whether a normalization procedure, i.e. a procedure aimed at removing unwanted variation, has been successful: a “bad” plot would suggest a failure to normalize. In a "good" plot the boxplots are roughly centered at zero. As you can see in the pre-normalization panel, there is variation across the samples that should probably be removed.
+
+On the right, you can see curves displaying the smoothed gene or peak counts per sample in function of GC content. GC content can be of particular importance in ATAC seq because the enzymatic cut by Tn5 will introduce bias due to binding preference, which is in itself associated with GC content. The accessibility count of a particular genomic region is thus associated with its GC-content. However, the slope and shape of the curves may differ between samples, which indicates that GC-content effects are sample-specific and can therefore bias between-sample comparisons. One might initially think that, because DA analyses involve comparing read counts between samples for a given genomic region with a fixed GC-content, GC-content effects would cancel out. However, because of their sample-specificity, GC-content effects also impact log-fold-changes comparing accessibility between samples for a given region. In the pre-normalization plot below there is indeed some evidence for a different average peak count across the samples.
+
+The two plots show the need for normalization. Many methods are available (and were indeed tried during the analysis) but here the results are shown for FQ-FQ normalization. This is a GC aware normalization method, based on two rounds of full-quantile normalization. First, FQ normalization within a sample across bins of features (e.g., peaks or genes) with similar GC-content and, subsequently, FQ normalization between samples. FQ-FQ and other normalization methods for ATAC-seq have recently been described in [this paper](https://www.biorxiv.org/content/10.1101/2021.01.26.428252v1.full). Then FQ normalization panel below show this normalization indeed makes the samples more comparable.
+
+:::{.panel-tabset}
+
+#### Before Normalization
+
+::: {#fig-pre layout-ncol=2}
+
+![RLE Boxplots](https://uppsala.box.com/shared/static/9k05fwnjvqh4xc88inwu5ufmx5m3p6nr.png){#fig-pre-rle}
+
+![Peak counts in function of GC-content](https://uppsala.box.com/shared/static/93pbgj9l0k0tt9clc8h1ykvimmeuout1.png){#fig-pre-gc}
+
+Before Normalization
+:::
+
+#### Post Normalization
+
+::: {#fig-post layout-ncol=2}
+
+![RLE Boxplots](https://uppsala.box.com/shared/static/a9druk2ggqw0ijvob0u81jkd82fxf7i7.png){#fig-post-rle}
+
+![Peak counts in function of GC-content](https://uppsala.box.com/shared/static/m0zny3g7aet0wdzyq3agjlvxl1zw0e0k.png){#fig-post-gc}
+
+After Normalization
+:::
+
+:::
+
+
+### MD plots and FC content 
+
+Below you can see the effect of FQ-FQ normalization for a selection of group comparisons. On the left are the pre-normalization plots, and on the the right after normalization. 
+
+The top row shows MD plots. MD plots depict global patterns of measurements compared between two samples, where each tested genomic feature is quantified by the difference between two groups as the y-axis (D) and average logged read count as the x-axis (M). Each dot is a single interval/peak. For well normalized data, one would expect most peaks not to differ between groups (if we assume most peaks are similar between the two groups). As visible in the plots below, after FQ-FQ normalization (right plot) the bulk of the peaks centers around 0 and most systematic differences between groups has been normalized.
+
+The bottom row shows gc-content stratified boxplots of the log fold change of read counts. One would expect most log fold changes to be centered around zero and no systematic shifts associated with the gc content.
+
+Again, normalization greatly diminishes the biases affecting the peak counts.
+
+```{r}
+cons <- list.files(path = "./Results/EDA/MD/pre_norm/", pattern = "_md.png")
+con1 <- as.list(gsub("_md.png", "", cons))
+ojs_define(contrast = con1)
+```
+
+```{ojs}
+viewof treat_sel = Inputs.select(contrast, { label: "Choose Contrast" })
+html`<p></p>`
+```
+
+::: {#fig-md layout-ncol=2}
+
+```{ojs}
+md`![Before Normalization](./Results/EDA/MD/pre_norm/${treat_sel}_md.png)`
+```
+
+```{ojs}
+md`![After Normalization](./Results/EDA/MD/post_norm/${treat_sel}_md.png)`
+```
+
+MD Plots.
+:::
+
+## PCA
+
+Using [Principal Component Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), the structure in the data was visualized by projecting the samples on a two-dimensional graph
+using the two first principal components (PC). These components are linear combinations of the peaks that explain the most variation between those samples. These kind of plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances between samples should be biologically interpretable. A plot of PC1 vs PC2 using the 500 most variable peaks and colored by their experimental group is shown below. 
+The different time points do seem to cluster in this plot, with timepoints 1 and 4 more similar, separate from both timepoint 0 and 24. Knockdown samples are not easily distinguishable from control samples, indicating they are very alike. There does seem to be a small donor effect along PC2 (might be worth taking into account during DE...). From this PCA plot one can infer differences exist between the time points and that there do not appear to be major outliers or obvious sample swaps between time points.
+
+![Principal Component Plot](https://uppsala.box.com/shared/static/hwrbd1matqw7ycmo59zmxk6q3m4mnm2i.png){#fig-pca}
+
+## Differential Expression
+
+An important analysis question is the quantification and statistical inference of systematic changes between conditions, as compared to within-condition variability. The package DESeq2 provides methods to test for differential expression by use of negative binomial generalized linear models; the estimates of dispersion and logarithmic fold changes incorporate data-driven prior distributions. 
+
+The contrasts that will be compared are:
+
+  * C_1 vs C_0
+  * C_4 vs C_0
+  * C_24 vs C_0
+  * IK_0 vs C_0
+  * IK_1 vs C_1
+  * IK_4 vs C_4
+  * IK_24 vs C_24
+
+The design formula is normalized_counts ~ donor + treatment_group. This means we control for donor-specific effects. 
+
+*Multiple test correction*
+
+Note that we have pvalues and p-adjusted values in the output. Which should we use to identify significantly differentially expressed genes?
+
+If we used the p-value directly from with a significance cut-off of p < 0.05, that means there is a 5% chance it is a false positives. Each p-value is the result of a single test (single peak). The more peaks we test, the more we inflate the false positive rate. This is the multiple testing problem. For example, if we test 20,000 peaks for differential expression, at p < 0.05 we would expect to find 1,000 peaks by chance. If we found 3000 peaks to be differentially expressed total, roughly one third of our genes are false positives. We would not want to sift through our “significant” peaks to identify which ones are true positives.
+
+DESeq2 helps reduce the number of peaks tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing to reduce the number of false positives. In DESeq2, the p-values attained are corrected for multiple testing using the Benjamini and Hochberg method by default. **These p-adjusted values should be used to determine significant genes.** 
+
+:::{.callout-note}
+So what does FDR < 0.05 mean? By setting the FDR cutoff to < 0.05, we’re saying that the proportion of false positives we expect amongst our differentially expressed genes is 5%. For example, if you call 500 peaks as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
+:::
+
+Below are shown the **top 1000 genes per contrast**, ranked by FDR. This is an interactive table so you can filter or rank as you wish by clincking on the arrows in the header. Moreover, a volcano plot of the results can be seen in the "Volcano" tab. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
+
 
 # Data Responsibility
 

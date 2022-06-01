@@ -9,4 +9,4 @@
 rsync -harv --exclude '*.bam' --exclude '*.bigWig' --exclude '*.mat.tab' --exclude '*.mat.gz' /Users/vinva957/wharf_mnt/Results /Users/vinva957/library/CloudStorage/Box-Box/SMS_5986 --delete
 
 ## Rsync only the figures to the github controlled folder
-rsync -harv --prune-empty-dirs --include "*/" --include="*.pdf" --include=".png" --include="*.svg" --include="*.html" --exclude="*" /Users/vinva957/wharf_mnt/Results /Users/vinva957/Desktop/NBIS/Projects/SMS-5986-21-atac --delete
+rsync -harv --prune-empty-dirs --include "*/" --include="*.pdf" --include="*.png" --include="*.svg" --include="*.html" --exclude="*" /Users/vinva957/wharf_mnt/Results /Users/vinva957/Desktop/NBIS/Projects/SMS-5986-21-atac --delete
