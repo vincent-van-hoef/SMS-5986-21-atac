@@ -30,11 +30,12 @@ box_auth()
 ```
 
 :::{.callout-note collapse="true"}
-## Click here to see the version and updates of this report
+
+# Click here to see the version and updates of this report
 
 Here you can see the status of the report. This will be updated as sections are added or improved.
 
-- Version 1: [12/5/22] 
+- Version 1: [1/6/22] First version - several sections still missing due to offline server. 
 
 :::
 
@@ -298,6 +299,10 @@ The different time points do seem to cluster in this plot, with timepoints 1 and
 
 ## Differential Expression
 
+Full results can be downloaded from here.
+
+  <iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" style="width:100%; height:400px;"></iframe> 
+
 An important analysis question is the quantification and statistical inference of systematic changes between conditions, as compared to within-condition variability. The package DESeq2 provides methods to test for differential expression by use of negative binomial generalized linear models; the estimates of dispersion and logarithmic fold changes incorporate data-driven prior distributions. 
 
 The contrasts that will be compared are:
@@ -326,6 +331,65 @@ So what does FDR < 0.05 mean? By setting the FDR cutoff to < 0.05, we’re sayin
 
 Below are shown the **top 1000 genes per contrast**, ranked by FDR. This is an interactive table so you can filter or rank as you wish by clincking on the arrows in the header. Moreover, a volcano plot of the results can be seen in the "Volcano" tab. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
 
+```{r}
+deseq <- list.files(path = "./Results/DESeq2/", pattern = "_volcano.png", recursive = TRUE)
+deseq <- as.list(gsub("/.*", "", deseq))
+ojs_define(deseq = deseq)
+```
+
+```{ojs}
+viewof deseq_sel = Inputs.select(deseq, { label: "Choose Contrast" })
+html`<p></p>`
+```
+
+:::{.panel-tabset}
+
+# Volcano
+
+```{ojs}
+md`![Volcano](/Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png)`
+```
+
+# Data
+
+#```{ojs}
+#data = FileAttachment("/Results/DESeq2/${deseq_sel}/${deseq_sel}.csv").csv({ typed: true })
+#```
+
+:::
+
+:::{.callout-note}
+
+# How Basic Annotation Works
+
+The process of annotating peaks/regions using HOMER is divided into two primary parts.  The first determines the distance to the nearest TSS and assigns the peak to that gene.  The second determines the genomic annotation of the region occupied by the center of the peak/region.
+
+*Distance to the nearest TSS*
+
+By default, it uses the positions of RefSeq transcription start sites to determine the closest TSS, reporting the distance (negative values mean upstream of the TSS, positive values mean downstream), and various annotation information linked to locus including alternative identifiers (unigene, entrez gene, ensembl, gene symbol etc.).  
+
+*Genomic Annotation*
+
+To annotate the location of a given peak in terms of important genomic features, HOMER calls a separate program (assignGenomeAnnotation) to efficiently assign peaks to one of millions of possible annotations genome wide.  Two types of output are provided.  The first is "Basic Annotation" that includes whether a peak is in the TSS (transcription start site), TTS (transcription termination site), Exon (Coding), 5' UTR Exon, 3' UTR Exon, Intronic, or Intergenic, which are common annotations that many researchers are interested in.  A second round of "Detailed Annotation" also includes more detailed annotation, also considering repeat elements and CpG islands.  Since some annotation overlap, a priority is assign based on the following (in case of ties it's random [i.e. if there are two overlapping repeat element annotations]):
+
+- TSS (by default defined from -1kb to +100bp)
+- TTS (by default defined from -100 bp to +1kb)
+- CDS Exons
+- 5' UTR Exons
+- 3' UTR Exons
+- **CpG Islands
+- **Repeats
+- Introns
+- Intergenic
+
+
+** Only applicable for the "Detailed Annotation".
+
+Although HOMER doesn't allow you to explicitly change the definition of the region that is the TSS (-1kb to +100bp), you can "do it yourself" by sorting the annotation output in EXCEL by the "Distance to nearest TSS" column, and selecting those within the range you are interested in.
+:::
+
+
+## Gene set Enrichment Analysis
 
 # Data Responsibility
 
