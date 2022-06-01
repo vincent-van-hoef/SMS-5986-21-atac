@@ -47,7 +47,8 @@ You can leave comments on this report by opening the sidebar on the very right o
 
 # Introduction
 
-This is the report for the analysis of project #5986. It includes the preprocessing, quality control and downstream analysis (i.e. differential expression and pathway enrichment analysis). More raw data is available but not yet included in this report. The experiment consist of 2 patient-derived cell lines; each either knocked down for IRAK3 or control and followed during 4 timepoints: 0, 1, 4 and 24 hours. So, a total of 16 samples to be analyzed:
+This is the report for the analysis of project #5986. It includes the preprocessing, quality control and downstream analysis (i.e. differential expression and pathway enrichment analysis). The experiment consist of 2 patient-derived cell lines; each either knocked down for IRAK3 or control and followed during 4 timepoints: 0, 1, 4 and 24 hours. 
+In addition 2 donors (donor 1 and 2) were analyzed at timepoint 0. So, a total of 20 samples to be analyzed:
 
 ```{r tab, results='asis'}
 tab <- "
@@ -55,6 +56,8 @@ tab <- "
 |------|:-----------:|:------:|:-----:|
 | C0_R1 | Control | 0 | 5 |
 | C0_R2 | Control | 0 | 6 |
+| C0_B_R1 | Control | 0 | 1 |
+| C0_B_R2 | Control | 0 | 2 |
 | C1_R1 | Control | 1 | 5 |
 | C1_R2 | Control | 1 | 6 |
 | C4_R1 | Control | 4 | 5 |
@@ -63,6 +66,8 @@ tab <- "
 | C24_R2 | Control | 24 | 6 |
 | IK0_R1 | Knockdown | 0 | 5 |
 | IK0_R2 | Knockdown | 0 | 6 |
+| IK0_B_R1 | Knockdown | 0 | 1 |
+| IK0_B_R2 | Knockdown | 0 | 2 |
 | IK1_R1 | Knockdown | 1 | 5 |
 | IK1_R2 | Knockdown | 1 | 6 |
 | IK4_R1 | Knockdown | 4 | 5 |
@@ -125,12 +130,9 @@ The data was delivered as standard fastq files containing the raw, unmapped read
 6. Create IGV session file containing bigWig tracks, peaks and differential sites for data visualisation (IGV).
 7. Present QC for raw read, alignment, peak-calling and differential accessibility results (ataqv, MultiQC, R)
 
-
-
 # Results
 
 ## Quality control 
-
 
 Modern high throughput sequencers can generate hundreds of millions of sequences in a single run. Before analysing this sequences to draw biological conclusions you should always perform some simple quality control checks to ensure that the raw data looks good and there are no problems or biases in your data which may affect how you can usefully use it. Two very useful quality control softwares were run on the data: multiQC and ataqv. These contain many high-quality plots; most of them are interactive and with relevant help sections to help interpretation. Most figures can be filtered and downloaded as needed. If the figures are too small to see, please right-click and "Open Frame in New Tab"
 
@@ -155,7 +157,7 @@ MultiQC is a reporting tool that parses summary statistics from results and log 
 
 ::: {#fig-multiqc}
 
-<iframe width="560" height="615" src="./Results/multiqc_report.html"></iframe>
+<iframe width="560" height="615" src="./Results/multiqc/broadPeak/multiqc_report.html"></iframe>
 
 MultiQC Report.
 :::
@@ -259,11 +261,7 @@ After Normalization
 
 Below you can see the effect of FQ-FQ normalization for a selection of group comparisons. On the left are the pre-normalization plots, and on the the right after normalization. 
 
-The top row shows MD plots. MD plots depict global patterns of measurements compared between two samples, where each tested genomic feature is quantified by the difference between two groups as the y-axis (D) and average logged read count as the x-axis (M). Each dot is a single interval/peak. For well normalized data, one would expect most peaks not to differ between groups (if we assume most peaks are similar between the two groups). As visible in the plots below, after FQ-FQ normalization (right plot) the bulk of the peaks centers around 0 and most systematic differences between groups has been normalized.
-
-The bottom row shows gc-content stratified boxplots of the log fold change of read counts. One would expect most log fold changes to be centered around zero and no systematic shifts associated with the gc content.
-
-Again, normalization greatly diminishes the biases affecting the peak counts.
+MD plots are shown in @fig-md. MD plots depict global patterns of measurements compared between two samples, where each tested genomic feature is quantified by the difference between two groups as the y-axis (D) and average logged read count as the x-axis (M). Each dot is a single interval/peak. For well normalized data, one would expect most peaks not to differ between groups (if we assume most peaks are similar between the two groups). As visible in the plots below, after FQ-FQ normalization (right plot) the bulk of the peaks centers around 0 and most systematic differences between groups has been normalized.
 
 ```{r}
 cons <- list.files(path = "./Results/EDA/MD/pre_norm/", pattern = "_md.png")
@@ -288,6 +286,34 @@ md`![After Normalization](./Results/EDA/MD/post_norm/${treat_sel}_md.png)`
 
 MD Plots.
 :::
+
+In @fig-gc-con, stratified boxplots of the log fold change of read counts are shown. One would expect most log fold changes to be centered around zero and no systematic shifts associated with the gc content.
+
+```{r}
+consGC <- list.files(path = "./Results/EDA/GC_Content/pre_norm/", pattern = "_LFC_gc_bin.png")
+consGC <- as.list(gsub("_LFC_gc_bin.png", "", consGC))
+ojs_define(consGC = consGC)
+```
+
+```{ojs}
+viewof consGC_sel = Inputs.select(consGC, { label: "Choose Contrast" })
+html`<p></p>`
+```
+
+::: {#fig-gc-con layout-ncol=2}
+
+```{ojs}
+md`![Before Normalization](./Results/EDA/GC_Content/pre_norm/${consGC_sel}_LFC_gc_bin.png)`
+```
+
+```{ojs}
+md`![After Normalization](./Results/EDA/GC_Content/post_norm/${consGC_sel}_LFC_gc_bin.png)`
+```
+
+LogFC Boxplots binned for GC content.
+:::
+
+Again, normalization greatly diminishes the biases affecting the peak counts.
 
 ## PCA
 
@@ -329,7 +355,7 @@ DESeq2 helps reduce the number of peaks tested by removing those genes unlikely 
 So what does FDR < 0.05 mean? By setting the FDR cutoff to < 0.05, we’re saying that the proportion of false positives we expect amongst our differentially expressed genes is 5%. For example, if you call 500 peaks as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
 :::
 
-Below are shown the **top 1000 genes per contrast**, ranked by FDR. This is an interactive table so you can filter or rank as you wish by clincking on the arrows in the header. Moreover, a volcano plot of the results can be seen in the "Volcano" tab. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
+The data table below contains the peaks with a padj < 0.05 and an absolute Log(FC) > 1 or - if no peaks reach these thresholds - the peaks with a p value < 0.05. This is an interactive table so you can filter or rank as you wish by clincking on the arrows in the header. Moreover, a volcano plot of the results can be seen in the "Volcano" tab. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
 
 ```{r}
 deseq <- list.files(path = "./Results/DESeq2/", pattern = "_volcano.png", recursive = TRUE)
@@ -352,9 +378,9 @@ md`![Volcano](/Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png)`
 
 # Data
 
-#```{ojs}
-#data = FileAttachment("/Results/DESeq2/${deseq_sel}/${deseq_sel}.csv").csv({ typed: true })
-#```
+```{ojs}
+html`<iframe src="./Results/DESeq2/${deseq_sel}/${deseq_sel}_sig.html" width:100% height:600px></iframe>`
+```
 
 :::
 
@@ -390,6 +416,43 @@ Although HOMER doesn't allow you to explicitly change the definition of the regi
 
 
 ## Gene set Enrichment Analysis
+
+An essential method to make biological sense of the peak/region data is pathway or functional enrichment analysis. Single differentially expressed peaks might not be so informative in and of themselves but if multiple peaks would regulate the expression of multiple genes that are linked to the same biological function, this might be an indication of a real biological effect. The difficulty in doing this using peak based data is that the link between peak and gene is not always clear. There is no real way for example to link a peak in an intergenic region to a specific gene, without extensive experimental work. As described above, the different peaks were annotated using HOMER, so a natural way to increase our confidence in the gene association of the different peaks is by subsetting all peaks to just the ones around known TSS and then selecting the closest gene. This is described for example in [this tutorial](https://rockefelleruniversity.github.io/RU_ATACseq/). For the pathway enrichment in this report, we only used the peaks located 1000bp upstream or 1000bp downstream of the TSS.
+
+:::{.panel-tabset}
+
+# Over-representation Analysis (ORA)
+
+
+Over-representation (or enrichment) analysis is a statistical method that determines whether genes from pre-defined sets (i.e those belonging to a specific GO term or KEGG pathway) are present more than would be expected (over-represented) in a subset of your data. In this case this subset of the data are the genes with a TSS covered by a peak (+/- 1000bp) with an FDR < 0.05 and a log2FoldChange > 0 for the "more accessible TSS" and Log2FoldChange < 0 for the "Less accesible TSS". The pre-defined gene sets tested here are the Biological Product terms of the GO annotation or the pathways in the KEGG repository.
+
+The results are collected in interactive html reports. Clicking on a term will show which specific genes are in our dataset. Figures and tables can be downloaded. 
+
+# Gene Set Enrichment Analysis
+
+Since the knockdown versus control comparisons do not yield a subset of peaks with significantly different coverage, a different enrichment strategy is used for these comparisons. GSEA or gene set enrichment analysis should in theory be suited better to detect enriched biological themes in combinations of genes/peaks that move just a little bit by themselves but in group move in the same direction.
+
+:::{.callout-note}
+To make sense of this long list of peaks, we can perform a gene set enrichment analysis (GSEA). GSEA uses a given statistical metric comparing two conditions to rank all peaks/genes and applies a weighted Kolmogorov–Smirnov (KS) statistic to calculate an Enrichment Score (ES). Basically, all peaks within 2000bp of a Transcription Start Site (1000bp upstream and 1000bp downstream) were collected and ranked according to the log2FoldChange of their respective peak. Next, the ES for different gene sets are calculated running through the entire ranked list increasing the score when a gene in the set is encountered and decreasing the score when the gene encountered is not in the analyzed set. The ES of this set is the maximum difference from 0.
+
+***
+**Calculation of an Enrichment Score**
+
+* Rank genes by a statistic (e.g. log2FoldChange)
+* Compute cumulative sum over ranked genes:
+  - Increase sum when gene in set, decrease it otherwise. 
+  - Magnitude of increment depends on correlation of gene
+with phenotype.
+* Record the maximum deviation from zero as the enrichment score (ES)
+
+***
+
+A high (N)ES indicates these genes are found high up in the list. In other words, a high (N)ES value means that for the genes in this set there is - on average - a shift towards more open chromatin. The significance of each (N)ES is calculated by permuting the sets and recomputing the ES, getting a null distribution for the ES for a particular gene set. A multiple comparison correction is also performed on the p values. More info on the GSEA algorithm can be found at [https://bioinformatics.mdanderson.org/MicroarrayCourse/Lectures09/gsea1_bw.pdf].
+
+In this projects we used as a ranking metric the log2FoldChange of the peaks within 2000bp around a TSS. This way genes can be ranked from more open chromatin to mpre closed chromatin. When it comes to the gene sets to be tested, we use the KEGG collection of pathways.
+:::
+
+:::
 
 # Data Responsibility
 
