@@ -175,6 +175,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#over-representation-analysis-ora" id="toc-over-representation-analysis-ora" class="nav-link" data-scroll-target="#over-representation-analysis-ora">Over-representation Analysis (ORA)</a></li>
   <li><a href="#gene-set-enrichment-analysis-1" id="toc-gene-set-enrichment-analysis-1" class="nav-link" data-scroll-target="#gene-set-enrichment-analysis-1">Gene Set Enrichment Analysis</a></li>
+  <li><a href="#comparison-donor-pairs" id="toc-comparison-donor-pairs" class="nav-link" data-scroll-target="#comparison-donor-pairs">Comparison Donor Pairs</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#data-responsibility" id="toc-data-responsibility" class="nav-link" data-scroll-target="#data-responsibility">Data Responsibility</a></li>
@@ -518,7 +519,7 @@ Note
 </section>
 <section id="frip" class="level3">
 <h3 class="anchored" data-anchor-id="frip">FRiP</h3>
-<p>The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions.</p>
+<p>The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions, so a FRip &gt; 0.2. This is the case for most samples here.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./Results/qc/frip_score.svg" class="img-fluid figure-img"></p>
@@ -710,8 +711,6 @@ Note
 </section>
 <section id="differential-expression" class="level2">
 <h2 class="anchored" data-anchor-id="differential-expression">Differential Expression</h2>
-<p>Full results can be downloaded from here.</p>
-<p><iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&amp;view=list" style="width:100%; height:400px;"></iframe></p>
 <p>An important analysis question is the quantification and statistical inference of systematic changes between conditions, as compared to within-condition variability. The package DESeq2 provides methods to test for differential expression by use of negative binomial generalized linear models; the estimates of dispersion and logarithmic fold changes incorporate data-driven prior distributions.</p>
 <p>The contrasts that will be compared are:</p>
 <ul>
@@ -748,8 +747,8 @@ Note
 
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="372" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 371;"><span id="cb9-372"><a href="#cb9-372" aria-hidden="true" tabindex="-1"></a>viewof deseq_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(deseq<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
-<span id="cb9-373"><a href="#cb9-373" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="368" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 367;"><span id="cb9-368"><a href="#cb9-368" aria-hidden="true" tabindex="-1"></a>viewof deseq_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(deseq<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
+<span id="cb9-369"><a href="#cb9-369" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-9-1" data-nodetype="declaration">
@@ -770,7 +769,7 @@ Note
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="381" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 380;"><span id="cb10-381"><a href="#cb10-381" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">_volcano.png" width:100% height:300px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="377" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 376;"><span id="cb10-377"><a href="#cb10-377" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">_volcano.png" width:100% height:300px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-10" data-nodetype="expression">
 
@@ -779,14 +778,9 @@ Note
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="387" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 386;"><span id="cb11-387"><a href="#cb11-387" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">/</span><span class="sc">${</span>deseq_sel<span class="sc">}</span><span class="vs">_sig.html" width:100% height:600px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-11" data-nodetype="expression">
-
-</div>
-</div>
-</div>
+<p>Full results can be downloaded from here.</p>
+<iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&amp;view=list" style="width:100%; height:400px;">
+</iframe>
 </div>
 </div>
 </div>
@@ -829,18 +823,18 @@ How Basic Annotation Works
 <p>Over-representation (or enrichment) analysis is a statistical method that determines whether genes from pre-defined sets (i.e those belonging to a specific GO term or KEGG pathway) are present more than would be expected (over-represented) in a subset of your data. In this case this subset of the data are the genes with a TSS covered by a peak (+/- 1000bp) with an FDR &lt; 0.05 and a log2FoldChange &gt; 0 for the “more accessible TSS” and Log2FoldChange &lt; 0 for the “Less accesible TSS”. The pre-defined gene sets tested here are the Biological Product terms of the GO annotation or the pathways in the KEGG repository.</p>
 <p>The results are collected in interactive html reports. Clicking on a term will show which specific genes are in our dataset. Figures and tables can be downloaded.</p>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="435" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 434;"><span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a>viewof ora_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">"C_1_vs_C_0"</span><span class="op">,</span> <span class="st">"C_4_vs_C_0"</span><span class="op">,</span> <span class="st">"C_24_vs_C_0"</span>]<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
-<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="431" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 430;"><span id="cb11-431"><a href="#cb11-431" aria-hidden="true" tabindex="-1"></a>viewof ora_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">"C_1_vs_C_0"</span><span class="op">,</span> <span class="st">"C_4_vs_C_0"</span><span class="op">,</span> <span class="st">"C_24_vs_C_0"</span>]<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
+<span id="cb11-432"><a href="#cb11-432" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-12-1" data-nodetype="declaration">
+<div id="ojs-cell-11-1" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-12-2" data-nodetype="expression">
+<div id="ojs-cell-11-2" data-nodetype="expression">
 
 </div>
 </div>
@@ -851,9 +845,9 @@ How Basic Annotation Works
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="444" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 443;"><span id="cb13-444"><a href="#cb13-444" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_up/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_up.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="440" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 439;"><span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_up/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_up.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-13" data-nodetype="expression">
+<div id="ojs-cell-12" data-nodetype="expression">
 
 </div>
 </div>
@@ -861,9 +855,9 @@ How Basic Annotation Works
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="450" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 449;"><span id="cb14-450"><a href="#cb14-450" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_down/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_down.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="446" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 445;"><span id="cb13-446"><a href="#cb13-446" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_down/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_go_down.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-14" data-nodetype="expression">
+<div id="ojs-cell-13" data-nodetype="expression">
 
 </div>
 </div>
@@ -871,9 +865,9 @@ How Basic Annotation Works
 </div>
 <div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="456" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 455;"><span id="cb15-456"><a href="#cb15-456" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_up/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_up.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="452" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 451;"><span id="cb14-452"><a href="#cb14-452" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_up/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_up.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-15" data-nodetype="expression">
+<div id="ojs-cell-14" data-nodetype="expression">
 
 </div>
 </div>
@@ -881,9 +875,9 @@ How Basic Annotation Works
 </div>
 <div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb16" data-startfrom="462" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 461;"><span id="cb16-462"><a href="#cb16-462" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_down/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_down.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="458" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 457;"><span id="cb15-458"><a href="#cb15-458" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_down/Report_</span><span class="sc">${</span>ora_sel<span class="sc">}</span><span class="vs">_kegg_down.html" width:100% height:1200px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-16" data-nodetype="expression">
+<div id="ojs-cell-15" data-nodetype="expression">
 
 </div>
 </div>
@@ -923,18 +917,18 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb17" data-startfrom="492" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 491;"><span id="cb17-492"><a href="#cb17-492" aria-hidden="true" tabindex="-1"></a>viewof gsea_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">"IK_0_vs_C_0"</span><span class="op">,</span> <span class="st">"IK_1_vs_C_1"</span><span class="op">,</span> <span class="st">"IK_4_vs_C_4"</span><span class="op">,</span> <span class="st">"IK_24_vs_C_24"</span><span class="op">,</span> <span class="st">"IK_0_vs_C_0_D12"</span><span class="op">,</span> <span class="st">"IK_0_vs_C_0_D1256"</span>]<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
-<span id="cb17-493"><a href="#cb17-493" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb16" data-startfrom="488" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 487;"><span id="cb16-488"><a href="#cb16-488" aria-hidden="true" tabindex="-1"></a>viewof gsea_sel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">"IK_0_vs_C_0"</span><span class="op">,</span> <span class="st">"IK_1_vs_C_1"</span><span class="op">,</span> <span class="st">"IK_4_vs_C_4"</span><span class="op">,</span> <span class="st">"IK_24_vs_C_24"</span><span class="op">,</span> <span class="st">"IK_0_vs_C_0_D12"</span><span class="op">,</span> <span class="st">"IK_0_vs_C_0_D1256"</span>]<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Choose Contrast"</span> })</span>
+<span id="cb16-489"><a href="#cb16-489" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;/p&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-17-1" data-nodetype="declaration">
+<div id="ojs-cell-16-1" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-17-2" data-nodetype="expression">
+<div id="ojs-cell-16-2" data-nodetype="expression">
 
 </div>
 </div>
@@ -942,14 +936,21 @@ Note
 </div>
 <div class="column-body-outset-right">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb18" data-startfrom="499" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 498;"><span id="cb18-499"><a href="#cb18-499" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">_gsea/Report_</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">_gsea.html" width:100% height:900px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb17" data-startfrom="495" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 494;"><span id="cb17-495"><a href="#cb17-495" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;iframe src="./Results/DESeq2/</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">/Pathway_Enrichment/Project_</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">_gsea/Report_</span><span class="sc">${</span>gsea_sel<span class="sc">}</span><span class="vs">_gsea.html" width:100% height:900px&gt;&lt;/iframe&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-18" data-nodetype="expression">
+<div id="ojs-cell-17" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 </div>
+</section>
+<section id="comparison-donor-pairs" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-donor-pairs">Comparison Donor Pairs</h3>
+<p>For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in figure <strong>?@fig-comp</strong>. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.</p>
+<iframe width="560" height="615" src="./Results/DESeq2/C_1_vs_C_0/Pathway_Enrichment/Project_C_1_vs_C_0_go_down/Report_C_1_vs_C_0_go_down.html">
+</iframe>
+<p>For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0.</p>
 </section>
 </section>
 </section>
@@ -980,7 +981,7 @@ Note
 </main>
 <!-- /main column -->
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof sample_sel = Inputs.select(insert_hist, { label: \"Choose Sample\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"//| label: fig-insert-hist\n//| fig-cap: \"Insert size histogram.\"\nhtml`<iframe src=\"./Results/bwa/mergedLibrary/picard_metrics/pdf/${sample_sel}.mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf\" width:100% height:600px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"viewof treat_sel = Inputs.select(contrast, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"md`![Before Normalization](./Results/EDA/MD/pre_norm/${treat_sel}_md.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-5","inline":false,"source":"md`![After Normalization](./Results/EDA/MD/post_norm/${treat_sel}_md.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-6","inline":false,"source":"viewof consGC_sel = Inputs.select(consGC, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-7","inline":false,"source":"md`![Before Normalization](./Results/EDA/GC_Content/pre_norm/${consGC_sel}_LFC_gc_bin.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-8","inline":false,"source":"md`![After Normalization](./Results/EDA/GC_Content/post_norm/${consGC_sel}_LFC_gc_bin.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-9","inline":false,"source":"viewof deseq_sel = Inputs.select(deseq, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-10","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png\" width:100% height:300px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-11","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${deseq_sel}/${deseq_sel}_sig.html\" width:100% height:600px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-12","inline":false,"source":"viewof ora_sel = Inputs.select([\"C_1_vs_C_0\", \"C_4_vs_C_0\", \"C_24_vs_C_0\"], { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-13","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_go_up/Report_${ora_sel}_go_up.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-14","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_go_down/Report_${ora_sel}_go_down.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-15","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_kegg_up/Report_${ora_sel}_kegg_up.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-16","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_kegg_down/Report_${ora_sel}_kegg_down.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-17","inline":false,"source":"viewof gsea_sel = Inputs.select([\"IK_0_vs_C_0\", \"IK_1_vs_C_1\", \"IK_4_vs_C_4\", \"IK_24_vs_C_24\", \"IK_0_vs_C_0_D12\", \"IK_0_vs_C_0_D1256\"], { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-18","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${gsea_sel}/Pathway_Enrichment/Project_${gsea_sel}_gsea/Report_${gsea_sel}_gsea.html\" width:100% height:900px></iframe>`\n"},{"methodName":"interpretQuiet","source":"shinyInput('sample_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('treat_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('consGC_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('deseq_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('ora_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('gsea_sel')"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof sample_sel = Inputs.select(insert_hist, { label: \"Choose Sample\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"//| label: fig-insert-hist\n//| fig-cap: \"Insert size histogram.\"\nhtml`<iframe src=\"./Results/bwa/mergedLibrary/picard_metrics/pdf/${sample_sel}.mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf\" width:100% height:600px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"viewof treat_sel = Inputs.select(contrast, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"md`![Before Normalization](./Results/EDA/MD/pre_norm/${treat_sel}_md.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-5","inline":false,"source":"md`![After Normalization](./Results/EDA/MD/post_norm/${treat_sel}_md.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-6","inline":false,"source":"viewof consGC_sel = Inputs.select(consGC, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-7","inline":false,"source":"md`![Before Normalization](./Results/EDA/GC_Content/pre_norm/${consGC_sel}_LFC_gc_bin.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-8","inline":false,"source":"md`![After Normalization](./Results/EDA/GC_Content/post_norm/${consGC_sel}_LFC_gc_bin.png)`\n"},{"methodName":"interpret","cellName":"ojs-cell-9","inline":false,"source":"viewof deseq_sel = Inputs.select(deseq, { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-10","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png\" width:100% height:300px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-11","inline":false,"source":"viewof ora_sel = Inputs.select([\"C_1_vs_C_0\", \"C_4_vs_C_0\", \"C_24_vs_C_0\"], { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-12","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_go_up/Report_${ora_sel}_go_up.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-13","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_go_down/Report_${ora_sel}_go_down.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-14","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_kegg_up/Report_${ora_sel}_kegg_up.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-15","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${ora_sel}/Pathway_Enrichment/Project_${ora_sel}_kegg_down/Report_${ora_sel}_kegg_down.html\" width:100% height:1200px></iframe>`\n"},{"methodName":"interpret","cellName":"ojs-cell-16","inline":false,"source":"viewof gsea_sel = Inputs.select([\"IK_0_vs_C_0\", \"IK_1_vs_C_1\", \"IK_4_vs_C_4\", \"IK_24_vs_C_24\", \"IK_0_vs_C_0_D12\", \"IK_0_vs_C_0_D1256\"], { label: \"Choose Contrast\" })\nhtml`<p></p>`\n"},{"methodName":"interpret","cellName":"ojs-cell-17","inline":false,"source":"html`<iframe src=\"./Results/DESeq2/${gsea_sel}/Pathway_Enrichment/Project_${gsea_sel}_gsea/Report_${gsea_sel}_gsea.html\" width:100% height:900px></iframe>`\n"},{"methodName":"interpretQuiet","source":"shinyInput('sample_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('treat_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('consGC_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('deseq_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('ora_sel')"},{"methodName":"interpretQuiet","source":"shinyInput('gsea_sel')"}]}
 </script>
 <script type="module">
 window._ojs.paths.runtimeToDoc = "../../..";

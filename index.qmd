@@ -381,7 +381,7 @@ html`<iframe src="./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png" width:
 
 Full results can be downloaded from here.
 
-  <iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" style="width:100%; height:400px;"></iframe> 
+<iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" style="width:100%; height:400px;"></iframe> 
 
 :::
 
@@ -496,6 +496,15 @@ html`<iframe src="./Results/DESeq2/${gsea_sel}/Pathway_Enrichment/Project_${gsea
 ```
 
 :::
+
+### Comparison Donor Pairs
+
+For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in figure @fig-comp. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.
+
+<iframe width="560" height="615" src="./Results/DESeq2/C_1_vs_C_0/Pathway_Enrichment/Project_C_1_vs_C_0_go_down/Report_C_1_vs_C_0_go_down.html"></iframe>
+
+For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0.
+
 
 # Data Responsibility
 
