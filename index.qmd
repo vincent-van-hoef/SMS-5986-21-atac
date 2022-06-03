@@ -356,7 +356,7 @@ DESeq2 helps reduce the number of peaks tested by removing those genes unlikely 
 So what does FDR < 0.05 mean? By setting the FDR cutoff to < 0.05, we’re saying that the proportion of false positives we expect amongst our differentially expressed genes is 5%. For example, if you call 500 peaks as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
 :::
 
-The data table below contains the peaks with a padj < 0.05 and an absolute Log(FC) > 1 or - if no peaks reach these thresholds - the peaks with a p value < 0.05. This is an interactive table so you can filter or rank as you wish by clincking on the arrows in the header. Moreover, a volcano plot of the results can be seen in the "Volcano" tab. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
+A volcano plot of the results for each contrast can be seen below. Peaks are colored red if their adjusted p value is smaller than 0.05 and the log2 Fold Change is larger than 1 or smaller than -1. Annotation of the peaks is done using HOMER (description below).
 
 ```{r}
 deseq <- list.files(path = "./Results/DESeq2/", pattern = "_volcano.png", recursive = TRUE)
@@ -369,21 +369,15 @@ viewof deseq_sel = Inputs.select(deseq, { label: "Choose Contrast" })
 html`<p></p>`
 ```
 
-:::{.panel-tabset}
-
-# Volcano
 
 ```{ojs}
-html`<iframe src="./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png" width:100% height:300px></iframe>`
+md`![Volcano Plot](./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png)`
 ```
-
-# Data
 
 Full results can be downloaded from here.
 
-<iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" style="width:100%; height:400px;"></iframe> 
+<iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" width="500" height="400" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
 
-:::
 
 :::{.callout-note}
 
@@ -501,7 +495,6 @@ html`<iframe src="./Results/DESeq2/${gsea_sel}/Pathway_Enrichment/Project_${gsea
 
 For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in figure @fig-comp. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.
 
-<iframe width="560" height="615" src="./Results/DESeq2/C_1_vs_C_0/Pathway_Enrichment/Project_C_1_vs_C_0_go_down/Report_C_1_vs_C_0_go_down.html"></iframe>
 
 For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0.
 
