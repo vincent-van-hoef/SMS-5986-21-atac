@@ -205,7 +205,7 @@ html`<iframe src="./Results/bwa/mergedLibrary/picard_metrics/pdf/${sample_sel}.m
 
 ### FRiP
 
-The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions, so a FRip > 0.2. This is the case for most samples here.
+The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions, so a FRiP > 0.2. This is the case for most samples here.
 
 ![Fraction of Reads in Peaks](./Results/qc/frip_score.svg)
 
@@ -493,10 +493,13 @@ html`<iframe src="./Results/DESeq2/${gsea_sel}/Pathway_Enrichment/Project_${gsea
 
 ### Comparison Donor Pairs
 
-For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in figure. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.
+For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in @fig-comp. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.
 
+![Comparison of two donor pairs](./Results/qc/DonorComparison.svg){#fig-comp}
 
-For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0.
+For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0 within the donor pair, see below.
+
+![2 Congruent comparisons](./Results/qc/DonorComparisonGood.svg)
 
 
 # Data Responsibility

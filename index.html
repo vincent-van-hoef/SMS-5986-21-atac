@@ -519,7 +519,7 @@ Note
 </section>
 <section id="frip" class="level3">
 <h3 class="anchored" data-anchor-id="frip">FRiP</h3>
-<p>The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions, so a FRip &gt; 0.2. This is the case for most samples here.</p>
+<p>The fraction of reads in called peaks is another important QC meaasure. Recommendations are to preferably have more than 20% of reads in peak regions, so a FRiP &gt; 0.2. This is the case for most samples here.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./Results/qc/frip_score.svg" class="img-fluid figure-img"></p>
@@ -938,8 +938,20 @@ Note
 </section>
 <section id="comparison-donor-pairs" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-donor-pairs">Comparison Donor Pairs</h3>
-<p>For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in figure. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.</p>
-<p>For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0.</p>
+<p>For the comparison between IK_0 and C_0 we have two sets of donors available. Unfortunately, the overlap between the two is rather low. This is visualzed in <a href="#fig-comp">Figure&nbsp;10</a>. Here, the log2(FC) of the two donor sets are plotted against each other. In black, you see the line indicating an identical distribution. In blue you see the regression line indicating almost no congruency.</p>
+<div id="fig-comp" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./Results/qc/DonorComparison.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption aria-hidden="true" class="figure-caption">Figure 10: Comparison of two donor pairs</figcaption><p></p>
+</figure>
+</div>
+<p>For comparison, below is an example of more congruency when comparing the IK_1 to C_0 and IK_4 to C_0 within the donor pair, see below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Results/qc/DonorComparisonGood.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption aria-hidden="true" class="figure-caption">2 Congruent comparisons</figcaption><p></p>
+</figure>
+</div>
 </section>
 </section>
 </section>
