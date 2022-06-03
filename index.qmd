@@ -139,7 +139,7 @@ Modern high throughput sequencers can generate hundreds of millions of sequences
 
 ### Overview
 
-::: { .panel-tabset}
+::: { .panel-tabset .column-page-inset-right}
 
 ### MultiQC
 
