@@ -1,3 +1,6 @@
+@import url("vendor.css");
+@import url("wg.css");
+
 #quarto-sidebar-toc-left::before {
   content: "";
   float: left;
@@ -29,6 +32,3 @@ iframe {
 .btn:hover {
   background-color: RoyalBlue;
 }
-
-@import url("vendor.css");
-@import url("wg.css");
