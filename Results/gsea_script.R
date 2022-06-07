@@ -44,10 +44,10 @@ create_go <- function(df, con = x){
                    outputDirectory = paste0("./DESeq2/", con, "/Pathway_Enrichment/")) 
 
 # Modify command, this one seemed to work on MacOS...
-system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_down/Report_", con, "_go_down.html"))
-system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_up/Report_", con, "_go_up.html"))
-system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_down/Report_", con, "_go_down.html"))
-system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_up/Report_", con, "_go_up.html"))
+#system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_down/Report_", con, "_go_down.html"))
+#system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_up/Report_", con, "_go_up.html"))
+#system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_down/Report_", con, "_go_down.html"))
+#system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_go_up/Report_", con, "_go_up.html"))
 
 WebGestaltR(enrichMethod = "ORA",
             organism = "hsapiens",
@@ -70,10 +70,10 @@ WebGestaltR(enrichMethod = "ORA",
             outputDirectory = paste0("./DESeq2/", con, "/Pathway_Enrichment/")) 
 
 # Modify command, this one seemed to work on MacOS...
-system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_down/Report_", con, "_kegg_down.html"))
-system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_up/Report_", con, "_kegg_up.html"))
-system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_down/Report_", con, "_kegg_down.html"))
-system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_up/Report_", con, "_kegg_up.html"))
+#system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_down/Report_", con, "_kegg_down.html"))
+#system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_up/Report_", con, "_kegg_up.html"))
+#system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_down/Report_", con, "_kegg_down.html"))
+#system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_kegg_up/Report_", con, "_kegg_up.html"))
 
   } else {
   
@@ -95,11 +95,23 @@ system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathwa
                 projectName = paste0(con, "_gsea"),
                 outputDirectory = paste0("./DESeq2/", con, "/Pathway_Enrichment"))    
     
-    system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_gsea/Report_", con, "_gsea.html"))
-    system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_gsea/Report_", con, "_gsea.html"))
+#    system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_gsea/Report_", con, "_gsea.html"))
+#    system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ./DESeq2/", con, "/Pathway_Enrichment/Project_", con, "_gsea/Report_", con, "_gsea.html"))
     
 }
 }
 
 lapply(names(de_files), function(x) create_go(de_files[[x]], x))
 
+htmls <- list.files(path = ".", pattern = ".*Report.*.html", recursive = TRUE)
+
+add_css <- function(x) {
+  system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ", x))
+  system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ", x))
+  system(paste0("sed -i'' -e '21i\\ 
+<link rel=\"stylesheet\" href=\"../../../../../assets/vendor.css\">' ", x))
+  system(paste0("sed -i'' -e '19i\\ 
+<link rel=\"stylesheet\" href=\"../../../../../assets/wg.css\">' ", x))
+}
+
+lapply(htmls, add_css)
