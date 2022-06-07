@@ -112,6 +112,10 @@ add_css <- function(x) {
 <link rel=\"stylesheet\" href=\"../../../../../assets/vendor.css\">' ", x))
   system(paste0("sed -i'' -e '19i\\ 
 <link rel=\"stylesheet\" href=\"../../../../../assets/wg.css\">' ", x))
+  system(paste0("sed -i'' -e '16i\\ 
+<script src=\"../../../../../assets/vendor.min.js\"></script>' ", x))
+  system(paste0("sed -i'' -e '16i\\ 
+<script src=\"../../../../../assets/wg.min.js\"></script>' ", x))
 }
 
 lapply(htmls, add_css)
