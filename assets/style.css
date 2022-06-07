@@ -1,6 +1,3 @@
-@import url("vendor.css");
-@import url("wg.css");
-
 #quarto-sidebar-toc-left::before {
   content: "";
   float: left;
