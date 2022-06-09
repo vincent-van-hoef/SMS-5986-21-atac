@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>WebGestalt (WEB-based GEne SeT AnaLysis Toolkit)</title>
+<link rel="icon" type="image/png" href="https://s3-us-west-2.amazonaws.com/webgestalt/favicon.png">
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-42098540-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=es2015%2Ces2016%2Cfetch"></script>
+ <script src="../../../../../assets/build/cytoscape.min.js"></script><script src="../../../../../assets/build/vendor.min.js"></script><script src="../../../../../assets/build/wg.min.js"></script><link rel="stylesheet" href="../../../../../assets/build/vendor.css"><link rel="stylesheet" href="../../../../../assets/build/wg.css"><link rel="stylesheet" href="../../../../../assets/package/css/materialdesignicons.min.css">
+<body>
+<hr><main>
+<div id="app">
+<div class="loading-preinit" v-cloak><div class="loading-icon"></div></div>
+<div class="wrapper" v-cloak>
+<div class="level">
+	<div class="level-left">
+		<div class="level-item">
+			<h4 class="title is-4 has-text-primary">Summary</h4>
+		</div>
+	</div>
+	<div class="level-right">
+		<div class="level-item">
+			<a class="button is-text" href="Project_C_4_vs_C_1_kegg_up.zip" target="_blank">Result Download</a>
+		</div>
+	</div>
+</div>
+
+<section id="summary" class="summary">
+<div class="card" v-bind:class="{active: summaryShown}" >
+	<div class="card-header" v-on:click="summaryShown=!summaryShown">
+		<p class="card-header-title">Job summary</p>
+		<a href="#" class="card-header-icon">
+			<b-icon :icon="summaryShown ? 'chevron-up' : 'chevron-down'"></b-icon>
+		</a>
+	</div>
+	<div class="card-content content" v-show="summaryShown">
+		<ul id="summary-list"> 
+		<li><b>Enrichment method:</b> ORA</li>
+		<li><b>Organism: </b>hsapiens</li>
+		<li>
+				<b>Enrichment Categories: </b>pathway_KEGG
+				<a class="has-text-info" href="http://www.webgestalt.org//api/geneset?organism=hsapiens&database=pathway_KEGG&fileType=gmt">
+					<b-icon icon="download" size="is-small"></b-icon>
+				</a>
+		</li>
+
+			<li><b>Interesting list: </b> a R object. <b> ID type: </b>genesymbol</li>
+			<li>The interesting list contains <b>98</b> user IDs in which <b>81</b> user IDs are unambiguously mapped to <b>81</b> unique entrezgene IDs and <b>17</b> user IDs can not be mapped to any entrezgene ID.</li>
+			<li>The GO Slim summary are based upon the <b>81</b> unique entrezgene IDs.</li>
+		<li>Among <b>81</b> unique entrezgene IDs, <b>38</b> IDs are annotated to the selected functional categories and also in the reference list, which are used for the enrichment analysis.</li>
+	<li><b>Reference list: </b>a R object. <b>ID type: </b>genesymbol</li>
+	<li>The reference list can be mapped to <b>19442</b> entrezgene IDs and <b> 6037</b> IDs are annotated to the selected functional categories that are used as the reference for the enrichment analysis.</li>
+</ul> 
+
+<p><b>Parameters for the enrichment analysis:</b></p>
+<ul><li><b>Minimum number of IDs in the category: </b>10</li>
+<li><b>Maximum number of IDs in the category: </b>500</li>
+<li><b>FDR Method: </b>BH</li>
+<li><b>Significance Level:</b> FDR < 0.05</li>
+</ul>
+	<p>Based on the above parameters, <b>7</b> categories are identified as enriched categories and all are shown in this report.</p>
+
+	</div>
+</div>
+</section>
+<section id="go-summary" class="summary">
+<div class="card" v-bind:class="{active: goShown}" >
+	<div class="card-header" v-on:click="goShown=!goShown">
+		<p class="card-header-title">GO Slim summary for the user uploaded IDs</p>
+		<a href="#" class="card-header-icon">
+			<b-icon :icon="goShown ? 'chevron-up' : 'chevron-down'"></b-icon>
+		</a>
+	</div>
+	<div v-show="goShown">
+		<div class="card-content">
+			<p>Each Biological Process, Cellular Component and Molecular Function category is represented by a red, blue and green bar, repectively.</p>
+			<p>The height of the bar represents the number of IDs in the user list and also in the category.</p>
+		</div>
+		<div class="card-image">
+			<img src="goslim_summary_C_4_vs_C_1_kegg_up.png" width="100%" height="100%" alt="Bar charts of enriched GO Slim terms"/>
+		</div>
+	</div>
+</div>
+</section> <h4 class="title is-4 has-text-primary">Enrichment Results</h4>
+<section id="enrich-result">
+	<p class="select-redundancy">
+		<b-tooltip label="Enriched gene sets are post-processed by two methods to reduce redundancy." type="is-dark" animated multilined dashed>
+			Redundancy reduction:
+		</b-tooltip>
+		<b-radio v-model="redundancy" native-value="all">All</b-radio>
+		<b-radio v-model="redundancy" native-value="ap">
+			<b-tooltip label="R package apcluster is used to cluster gene sets." type="is-dark" animated multilined dashed>
+				Affinity propagation
+			</b-tooltip>
+		</b-radio>
+		<b-radio v-model="redundancy" native-value="wsc">
+			<b-tooltip label="Find top gene sets while maximizing gene coverage." type="is-dark" animated multilined dashed>
+				Weighted set cover
+			</b-tooltip>
+		</b-radio>
+	</p>
+	<b-tabs v-model="activeTab" type="is-toggle">
+		<b-tab-item label="Table">
+			<wg-result-table
+				:data="enrichmentData"
+				:method="enrichMethod"
+			></wg-result-table>
+		</b-tab-item>
+		<b-tab-item label="Bar chart">
+		<div class="vertical-center-container">
+			<wg-bar-plot
+				:dimensions="bar.dimensions"
+				:label-width="bar.labelWidth"
+				:data="enrichmentData"
+				:value-key="bar.valueKey"
+				:x-label="bar.xLabel">
+			</wg-bar-plot>
+		</div>
+		</b-tab-item>
+		<b-tab-item label="Volcano plot">
+		<div class="vertical-center-container">
+			<wg-volcano-plot
+				:data="volcanoData"
+				:x="volcano.x"
+				:y="volcano.y"
+				:dimensions="volcano.dimensions"
+				:x-label="volcano.xLabel"
+				:label-types="volcano.labelTypes"
+				:x-transform="volcano.xTransform"
+				:radius="volcano.radius"
+				:color="volcano.color"
+				:tooltip-content="volcano.tooltipContent"
+				:show-all-labels="false"
+				:auto-place-labels="true"
+			></wg-volcano-plot>
+		</div>
+		</b-tab-item>
+	</b-tabs>
+	<wg-gene-table
+		:data="geneTables"
+		:info="enrichment"
+		:standard-id="standardId"
+		:method="enrichMethod"
+		:mapped-input-size="mappedInputSize"
+		:organism="organism"
+		:host-name="hostName"
+		:sets-with-net="false"
+	></wg-gene-table>
+</section> 
+
+</div>
+</div>
+</main>
+	<script type="text/javascript" src="http://www.webgestalt.org//assets/0.4/build/wg.min.js"></script>
+<script type="text/javascript">
+var enrichment = [{"geneSet":"hsa04621","description":"NOD-like receptor signaling pathway","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa04621+10379+11035+115362+3428+3569+3665+4938+4939+4940+6772","size":158,"overlap":10,"expect":0.99453370879576,"enrichmentRatio":10.0549633577615,"pValue":2.85493839680129e-08,"FDR":7.19858617004299e-06,"overlapId":"10379;11035;115362;3428;3569;3665;4938;4939;4940;6772"},{"geneSet":"hsa05168","description":"Herpes simplex infection","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa05168+10379+3133+3434+3569+3600+3665+4938+4939+4940+6772","size":166,"overlap":10,"expect":1.04488984594998,"enrichmentRatio":9.57038681039949,"pValue":4.58508673251146e-08,"FDR":7.19858617004299e-06,"overlapId":"10379;3133;3434;3569;3600;3665;4938;4939;4940;6772"},{"geneSet":"hsa05169","description":"Epstein-Barr virus infection","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa05169+10379+3133+3569+3665+4938+4939+4940+6772+9636","size":184,"overlap":9,"expect":1.15819115454696,"enrichmentRatio":7.77073798627002,"pValue":1.41791098950961e-06,"FDR":0.000148408016902006,"overlapId":"10379;3133;3569;3665;4938;4939;4940;6772;9636"},{"geneSet":"hsa05164","description":"Influenza A","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa05164+10379+3569+3665+4938+4939+4940+6772+91543","size":157,"overlap":8,"expect":0.988239191651483,"enrichmentRatio":8.09520616828696,"pValue":4.41028805575616e-06,"FDR":0.000327860798816904,"overlapId":"10379;3569;3665;4938;4939;4940;6772;91543"},{"geneSet":"hsa05160","description":"Hepatitis C","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa05160+10379+3434+3665+4938+4939+4940+6772","size":113,"overlap":7,"expect":0.711280437303296,"enrichmentRatio":9.84140661387983,"pValue":5.22071335695706e-06,"FDR":0.000327860798816904,"overlapId":"10379;3434;3665;4938;4939;4940;6772"},{"geneSet":"hsa05162","description":"Measles","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa05162+10379+3569+3665+4938+4939+4940+6772","size":119,"overlap":7,"expect":0.749047540168958,"enrichmentRatio":9.34520123839009,"pValue":7.36882223151269e-06,"FDR":0.000385635030115831,"overlapId":"10379;3569;3665;4938;4939;4940;6772"},{"geneSet":"hsa04630","description":"JAK-STAT signaling pathway","link":"http://www.kegg.jp/kegg-bin/show_pathway?hsa04630+10379+1440+338376+3569+3600+6772","size":147,"overlap":6,"expect":0.925294020208713,"enrichmentRatio":6.484425349087,"pValue":0.000273021105545279,"FDR":0.0122469467344597,"overlapId":"10379;1440;338376;3569;3600;6772"}];
+var background = [{"geneSet":"hsa05165","enrichmentRatio":3.68238062042524,"FDR":0.0948255729069014,"overlap":7},{"geneSet":"hsa05167","enrichmentRatio":4.67260061919505,"FDR":0.126293257329574,"overlap":5},{"geneSet":"hsa04623","enrichmentRatio":8.99255213505462,"FDR":0.126293257329574,"overlap":3},{"geneSet":"hsa05203","enrichmentRatio":4.51330741626794,"FDR":0.126293257329574,"overlap":5},{"geneSet":"hsa04060","enrichmentRatio":3.72347861842105,"FDR":0.126293257329574,"overlap":6},{"geneSet":"hsa04622","enrichmentRatio":7.81320103537532,"FDR":0.15556517327845,"overlap":3},{"geneSet":"hsa05143","enrichmentRatio":10.5912280701754,"FDR":0.336899256288545,"overlap":2},{"geneSet":"hsa05332","enrichmentRatio":9.34520123839009,"FDR":0.399178287989702,"overlap":2},{"geneSet":"hsa04620","enrichmentRatio":5.01689750692521,"FDR":0.419956302165966,"overlap":3},{"geneSet":"hsa04625","enrichmentRatio":4.76605263157895,"FDR":0.425605231387983,"overlap":3},{"geneSet":"hsa05144","enrichmentRatio":8.14709851551957,"FDR":0.425605231387983,"overlap":2},{"geneSet":"hsa04672","enrichmentRatio":7.74967907573813,"FDR":0.425605231387983,"overlap":2},{"geneSet":"hsa04668","enrichmentRatio":4.5390977443609,"FDR":0.425605231387983,"overlap":3},{"geneSet":"hsa05170","enrichmentRatio":3.41652518392756,"FDR":0.425605231387983,"overlap":4},{"geneSet":"hsa05321","enrichmentRatio":5.57433056325023,"FDR":0.700583656644675,"overlap":2},{"geneSet":"hsa05161","enrichmentRatio":3.55675569520817,"FDR":0.700583656644675,"overlap":3},{"geneSet":"hsa04217","enrichmentRatio":3.38017917133259,"FDR":0.760135247698132,"overlap":3},{"geneSet":"hsa05410","enrichmentRatio":4.5390977443609,"FDR":0.895742418873322,"overlap":2},{"geneSet":"hsa04657","enrichmentRatio":4.0219853431046,"FDR":1,"overlap":2},{"geneSet":"hsa05323","enrichmentRatio":3.92267706302794,"FDR":1,"overlap":2},{"geneSet":"hsa04933","enrichmentRatio":3.8281547241598,"FDR":1,"overlap":2},{"geneSet":"hsa04640","enrichmentRatio":3.57007687758723,"FDR":1,"overlap":2},{"geneSet":"hsa00240","enrichmentRatio":3.49161364950839,"FDR":1,"overlap":2},{"geneSet":"hsa05322","enrichmentRatio":3.45366132723112,"FDR":1,"overlap":2},{"geneSet":"hsa04659","enrichmentRatio":3.34459833795014,"FDR":1,"overlap":2},{"geneSet":"hsa04931","enrichmentRatio":3.08482370975984,"FDR":1,"overlap":2},{"geneSet":"hsa00760","enrichmentRatio":6.61951754385965,"FDR":1,"overlap":1},{"geneSet":"hsa01523","enrichmentRatio":5.88401559454191,"FDR":1,"overlap":1},{"geneSet":"hsa04514","enrichmentRatio":2.64780701754386,"FDR":1,"overlap":2},{"geneSet":"hsa04380","enrichmentRatio":2.62592431491953,"FDR":1,"overlap":2},{"geneSet":"hsa05020","enrichmentRatio":5.12478777589134,"FDR":1,"overlap":1},{"geneSet":"hsa05166","enrichmentRatio":2.04551615089225,"FDR":1,"overlap":3},{"geneSet":"hsa00380","enrichmentRatio":4.81419457735247,"FDR":1,"overlap":1},{"geneSet":"hsa05330","enrichmentRatio":4.67260061919505,"FDR":1,"overlap":1},{"geneSet":"hsa05219","enrichmentRatio":4.41301169590643,"FDR":1,"overlap":1},{"geneSet":"hsa05034","enrichmentRatio":2.33630030959752,"FDR":1,"overlap":2},{"geneSet":"hsa04216","enrichmentRatio":4.07354925775978,"FDR":1,"overlap":1},{"geneSet":"hsa04330","enrichmentRatio":3.97171052631579,"FDR":1,"overlap":1},{"geneSet":"hsa04940","enrichmentRatio":3.97171052631579,"FDR":1,"overlap":1},{"geneSet":"hsa04978","enrichmentRatio":3.78258145363408,"FDR":1,"overlap":1},{"geneSet":"hsa04218","enrichmentRatio":2.17627974044701,"FDR":1,"overlap":2},{"geneSet":"hsa00230","enrichmentRatio":2.1324620275521,"FDR":1,"overlap":2},{"geneSet":"hsa05320","enrichmentRatio":3.61064593301435,"FDR":1,"overlap":1},{"geneSet":"hsa05202","enrichmentRatio":2.0109926715523,"FDR":1,"overlap":2},{"geneSet":"hsa05152","enrichmentRatio":1.94930577978689,"FDR":1,"overlap":2},{"geneSet":"hsa05134","enrichmentRatio":3.11506707946336,"FDR":1,"overlap":1},{"geneSet":"hsa05416","enrichmentRatio":2.99751737835154,"FDR":1,"overlap":1},{"geneSet":"hsa00983","enrichmentRatio":2.69268510258698,"FDR":1,"overlap":1},{"geneSet":"hsa04612","enrichmentRatio":2.69268510258698,"FDR":1,"overlap":1},{"geneSet":"hsa05412","enrichmentRatio":2.64780701754386,"FDR":1,"overlap":1},{"geneSet":"hsa04917","enrichmentRatio":2.60440034512511,"FDR":1,"overlap":1},{"geneSet":"hsa04151","enrichmentRatio":1.49875868917577,"FDR":1,"overlap":3},{"geneSet":"hsa03320","enrichmentRatio":2.48231907894737,"FDR":1,"overlap":1},{"geneSet":"hsa03018","enrichmentRatio":2.44412955465587,"FDR":1,"overlap":1},{"geneSet":"hsa05133","enrichmentRatio":2.33630030959752,"FDR":1,"overlap":1},{"geneSet":"hsa05140","enrichmentRatio":2.33630030959752,"FDR":1,"overlap":1},{"geneSet":"hsa05212","enrichmentRatio":2.26954887218045,"FDR":1,"overlap":1},{"geneSet":"hsa04512","enrichmentRatio":2.23758339510749,"FDR":1,"overlap":1},{"geneSet":"hsa05163","enrichmentRatio":1.57295466388744,"FDR":1,"overlap":2},{"geneSet":"hsa01521","enrichmentRatio":2.17627974044701,"FDR":1,"overlap":1},{"geneSet":"hsa05414","enrichmentRatio":2.14687055476529,"FDR":1,"overlap":1},{"geneSet":"hsa04350","enrichmentRatio":2.06322624743677,"FDR":1,"overlap":1},{"geneSet":"hsa05132","enrichmentRatio":1.96133853151397,"FDR":1,"overlap":1},{"geneSet":"hsa04658","enrichmentRatio":1.93741976893453,"FDR":1,"overlap":1},{"geneSet":"hsa05146","enrichmentRatio":1.89129072681704,"FDR":1,"overlap":1},{"geneSet":"hsa04066","enrichmentRatio":1.72683066361556,"FDR":1,"overlap":1},{"geneSet":"hsa05142","enrichmentRatio":1.69008958566629,"FDR":1,"overlap":1},{"geneSet":"hsa04919","enrichmentRatio":1.55753353973168,"FDR":1,"overlap":1},{"geneSet":"hsa05012","enrichmentRatio":1.52758097165992,"FDR":1,"overlap":1},{"geneSet":"hsa05145","enrichmentRatio":1.51303258145363,"FDR":1,"overlap":1},{"geneSet":"hsa04650","enrichmentRatio":1.45750845002414,"FDR":1,"overlap":1},{"geneSet":"hsa04120","enrichmentRatio":1.29161317928969,"FDR":1,"overlap":1},{"geneSet":"hsa04068","enrichmentRatio":1.28119694397284,"FDR":1,"overlap":1},{"geneSet":"hsa04550","enrichmentRatio":1.2608604845447,"FDR":1,"overlap":1},{"geneSet":"hsa04932","enrichmentRatio":1.19449940641076,"FDR":1,"overlap":1},{"geneSet":"hsa05200","enrichmentRatio":1.00127156125608,"FDR":1,"overlap":3},{"geneSet":"hsa04145","enrichmentRatio":1.11096797938903,"FDR":1,"overlap":1},{"geneSet":"hsa04062","enrichmentRatio":0.940049828713796,"FDR":1,"overlap":1},{"geneSet":"hsa04510","enrichmentRatio":0.892519219396807,"FDR":1,"overlap":1},{"geneSet":"hsa04810","enrichmentRatio":0.802365762892079,"FDR":1,"overlap":1},{"geneSet":"hsa04144","enrichmentRatio":0.725426580149003,"FDR":1,"overlap":1}];
+var geneTables = {"hsa04621":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"GBP5","geneSymbol":"GBP5","geneName":"guanylate binding protein 5","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=115362","entrezgene":"115362"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"},{"userId":"RIPK3","geneSymbol":"RIPK3","geneName":"receptor interacting serine/threonine kinase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=11035","entrezgene":"11035"},{"userId":"IFI16","geneSymbol":"IFI16","geneName":"interferon gamma inducible protein 16","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3428","entrezgene":"3428"}],"hsa05168":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"IFIT1","geneSymbol":"IFIT1","geneName":"interferon induced protein with tetratricopeptide repeats 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3434","entrezgene":"3434"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"},{"userId":"HLA-E","geneSymbol":"HLA-E","geneName":"major histocompatibility complex, class I, E","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3133","entrezgene":"3133"},{"userId":"IL15","geneSymbol":"IL15","geneName":"interleukin 15","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3600","entrezgene":"3600"}],"hsa05169":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"ISG15","geneSymbol":"ISG15","geneName":"ISG15 ubiquitin-like modifier","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=9636","entrezgene":"9636"},{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"},{"userId":"HLA-E","geneSymbol":"HLA-E","geneName":"major histocompatibility complex, class I, E","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3133","entrezgene":"3133"}],"hsa05164":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"RSAD2","geneSymbol":"RSAD2","geneName":"radical S-adenosyl methionine domain containing 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=91543","entrezgene":"91543"},{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"}],"hsa05160":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"IFIT1","geneSymbol":"IFIT1","geneName":"interferon induced protein with tetratricopeptide repeats 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3434","entrezgene":"3434"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"}],"hsa05162":[{"userId":"OAS2","geneSymbol":"OAS2","geneName":"2'-5'-oligoadenylate synthetase 2","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4939","entrezgene":"4939"},{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"OAS1","geneSymbol":"OAS1","geneName":"2'-5'-oligoadenylate synthetase 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4938","entrezgene":"4938"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"OAS3","geneSymbol":"OAS3","geneName":"2'-5'-oligoadenylate synthetase 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=4940","entrezgene":"4940"},{"userId":"IRF7","geneSymbol":"IRF7","geneName":"interferon regulatory factor 7","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3665","entrezgene":"3665"}],"hsa04630":[{"userId":"IL6","geneSymbol":"IL6","geneName":"interleukin 6","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3569","entrezgene":"3569"},{"userId":"STAT1","geneSymbol":"STAT1","geneName":"signal transducer and activator of transcription 1","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=6772","entrezgene":"6772"},{"userId":"IRF9","geneSymbol":"IRF9","geneName":"interferon regulatory factor 9","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=10379","entrezgene":"10379"},{"userId":"CSF3","geneSymbol":"CSF3","geneName":"colony stimulating factor 3","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=1440","entrezgene":"1440"},{"userId":"IL15","geneSymbol":"IL15","geneName":"interleukin 15","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=3600","entrezgene":"3600"},{"userId":"IFNE","geneSymbol":"IFNE","geneName":"interferon epsilon","gLink":"https://www.ncbi.nlm.nih.gov/gene/?term=338376","entrezgene":"338376"}]};
+var clusters = {"ap":{"clusters":[["hsa04621","hsa05164","hsa05162"],["hsa05168","hsa05169","hsa05160","hsa04630"]],"representatives":["hsa04621","hsa05168"]},"wsc":{"representatives":["hsa04621","hsa05168","hsa04630","hsa05169","hsa05164"],"coverage":[1]}};
+
+wgLib({
+	enrichDatabase: "pathway_KEGG",
+	organism: "hsapiens",
+	hostName: "http://www.webgestalt.org/",
+	enrichment: enrichment,
+	background: background,
+	geneTables: geneTables,
+	clusters: clusters,
+	enrichMethod: "ora",
+	mappedInputSize: 38,
+	standardId: "entrezgene",
+	volcano: {
+		labelTypes: ["geneSet", "description"],
+		dimensions: { width: 960, height: 500 },
+		autoPlaceLabels: true,
+		y: "FDR",
+
+		x: "enrichmentRatio",
+		xLabel: "log2 of enrichment ratio",
+		radius: "overlap",
+		color: "overlap",
+			tooltipContent: ["geneSet", "description", "enrichmentRatio", "FDR", "pValue", "overlap"]
+	},
+	bar: {
+		dimensions: { width: 960, height: 300 },
+		labelWidth: 200,
+		tooltipContent: ["geneSet", "description", "enrichmentRatio", "FDR", "pValue", "overlap"],
+		valueKey: "enrichmentRatio",
+		xLabel: "Enrichment ratio"
+	}
+})
+
+
+</script>
+</html>

@@ -38,6 +38,7 @@ Here you can see the status of the report. This will be updated as sections are 
 - Version 1: [1/6/22] First version - several sections still missing due to offline server. 
 - Version 1.1: [3/6/22] Added old donors, additional differential peaks usage, pathway enrichment and various other plots.  
 - Version 1.2: [7/6/22] Fixed WebGestaltR visualizations online link.
+- Version 2: Added extra contrasts + reworked PCA
 
 :::
 
@@ -325,7 +326,21 @@ Using [Principal Component Analysis](http://setosa.io/ev/principal-component-ana
 using the two first principal components (PC). These components are linear combinations of the peaks that explain the most variation between those samples. These kind of plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances between samples should be biologically interpretable. A plot of PC1 vs PC2 using the 500 most variable peaks and colored by their experimental group is shown below. 
 The different time points do seem to cluster in this plot, with timepoints 1 and 4 more similar, separate from both timepoint 0 and 24. Knockdown samples are not easily distinguishable from control samples, indicating they are very alike. There does seem to be a small donor effect along PC2 (might be worth taking into account during DE...). From this PCA plot one can infer differences exist between the time points and that there do not appear to be major outliers or obvious sample swaps between time points.
 
-![Principal Component Plot](https://uppsala.box.com/shared/static/hwrbd1matqw7ycmo59zmxk6q3m4mnm2i.png){#fig-pca}
+```{r}
+pca_pl <- list.files(path = "./Results/EDA/PCA/", pattern = ".png")
+pca_pl <- as.list(gsub(".png", "", pca_pl))
+pca_pl <- as.list(gsub("PCA_PC1_PC2_", "", pca_pl))
+ojs_define(pca_pl = pca_pl)
+```
+
+```{ojs}
+viewof pca_sel = Inputs.select(pca_pl, { label: "Choose PCA Plot" })
+html`<p></p>`
+```
+
+```{ojs}
+md`![](./Results/EDA/PCA/PCA_PC1_PC2_${pca_sel}.png)`
+```
 
 ## Differential Expression
 
@@ -377,8 +392,7 @@ md`![Volcano Plot](./Results/DESeq2/${deseq_sel}/${deseq_sel}_volcano.png)`
 
 Full results can be downloaded from here.
 
-<iframe src="https://uppsala.app.box.com/embed/s/mvf0fuxlvyrxp7d8a8r7eap1n5crzgng?sortColumn=date&view=list" width="500" height="400" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
-
+<iframe src="https://uppsala.app.box.com/embed/s/35nb80xa3urk41i48gxh0bbuvg2lyht3?sortColumn=date&view=list" width="500" height="400" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
 
 :::{.callout-note}
 
@@ -423,7 +437,7 @@ Over-representation (or enrichment) analysis is a statistical method that determ
 The results are collected in interactive html reports. Clicking on a term will show which specific genes are in our dataset. Figures and tables can be downloaded. 
 
 ```{ojs}
-viewof ora_sel = Inputs.select(["C_1_vs_C_0", "C_4_vs_C_0", "C_24_vs_C_0"], { label: "Choose Contrast" })
+viewof ora_sel = Inputs.select(["C_1_vs_C_0", "C_4_vs_C_0", "C_24_vs_C_0", "C_24_vs_C_1", "C_24_vs_C_4", "C_4_vs_C_1"], { label: "Choose Contrast" })
 html`<p></p>`
 ```
 

@@ -1,0 +1,6 @@
+# Coverage: 1
+hsa04621
+hsa05168
+hsa04630
+hsa05169
+hsa05164

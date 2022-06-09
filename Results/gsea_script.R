@@ -108,14 +108,9 @@ htmls <- list.files(path = ".", pattern = ".*Report.*.html", recursive = TRUE)
 add_css <- function(x) {
   system(paste0("sed -i '' -e '/<header>/,/<\\/header>/d' ", x))
   system(paste0("sed -i '' -e '/<footer/,/<\\/footer>/d' ", x))
-  system(paste0("sed -i'' -e '16i\\ 
-<script src=\"../../../../../assets/build/cytoscape.min.js\"></script>
-<script src=\"../../../../../assets/build/vendor.min.js\"></script>
-<script src=\"../../../../../assets/build/wg.min.js\"></script>
-<link rel=\"stylesheet\" href=\"../../../../../assets/build/vendor.css\">
-<link rel=\"stylesheet\" href=\"../../../../../assets/build/wg.css\">
-<link rel=\"stylesheet\" href=\"../../../../../assets/package/css/materialdesignicons.min.css\">' ", x))
-
+  system(paste0("sed -i '' -e '16i\\ 
+ <script src=\"../../../../../assets/build/cytoscape.min.js\"></script><script src=\"../../../../../assets/build/vendor.min.js\"></script><script src=\"../../../../../assets/build/wg.min.js\"></script><link rel=\"stylesheet\" href=\"../../../../../assets/build/vendor.css\"><link rel=\"stylesheet\" href=\"../../../../../assets/build/wg.css\"><link rel=\"stylesheet\" href=\"../../../../../assets/package/css/materialdesignicons.min.css\">' ", x))
+  system(paste0("sed -i '' -e '17,22d' ", x))
 }
 
 lapply(htmls, add_css)
