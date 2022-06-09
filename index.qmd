@@ -38,7 +38,7 @@ Here you can see the status of the report. This will be updated as sections are 
 - Version 1: [1/6/22] First version - several sections still missing due to offline server. 
 - Version 1.1: [3/6/22] Added old donors, additional differential peaks usage, pathway enrichment and various other plots.  
 - Version 1.2: [7/6/22] Fixed WebGestaltR visualizations online link.
-- Version 2: Added extra contrasts + reworked PCA
+- Version 2: [9/6/22] Added extra contrasts + reworked PCA
 
 :::
 
